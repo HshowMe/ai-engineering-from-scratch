@@ -11,7 +11,7 @@ services:
               count: all
               capabilities: [gpu]
     volumes:
-      - ../../../:/workspace
+      - ../../../../:/workspace
       - ~/models:/models
       - ~/datasets:/data
     ports:
@@ -19,6 +19,27 @@ services:
     stdin_open: true
     tty: true
     command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+
+  flask-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ../../../../:/workspace
+      - ~/models:/models
+      - ~/datasets:/data
+    ports:
+      - "5000:5000"
+    stdin_open: true
+    tty: true
+    command: python /exrcises/00-07/app.py
 
   qdrant:
     image: qdrant/qdrant:v1.12.5
